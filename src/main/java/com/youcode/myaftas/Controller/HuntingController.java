@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/api/hunting")
 public class HuntingController {
     @Autowired
@@ -24,6 +25,7 @@ public class HuntingController {
 
 
     @PostMapping
+    //@PreAuthorize("hasAnyAuthority('JURY')")
     public ResponseEntity<Map<String, Object>> createHunting(@Valid @RequestBody List<HuntingDto> huntingDto){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -62,7 +64,8 @@ public class HuntingController {
         }
     }
 
-    @GetMapping("/all")
+    //@PreAuthorize("hasAnyAuthority('ROLE_ADHERENT')")
+    @GetMapping
     public ResponseEntity<Map<String, Object>> getAllHunting(){
         Map<String, Object> message = new HashMap<>();
         try{

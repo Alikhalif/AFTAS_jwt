@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public class LevelServiceImpl implements LevelService {
     private LevelRepository levelRepository;
     @Autowired
     private ModelMapper modelMapper;
+
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
 
     @Override
     public LevelRespDto create(LevelDto levelDto){
@@ -36,6 +39,7 @@ public class LevelServiceImpl implements LevelService {
 
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public void delete(Integer id){
         Level level = levelRepository.findById(id)
@@ -43,6 +47,7 @@ public class LevelServiceImpl implements LevelService {
         levelRepository.delete(level);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public LevelRespDto getOne(Integer id){
         Level level = levelRepository.findById(id)
@@ -50,11 +55,13 @@ public class LevelServiceImpl implements LevelService {
         return modelMapper.map(level, LevelRespDto.class);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public List<LevelRespDto> findAll() {
         return levelRepository.findAll().stream().map(level -> modelMapper.map(level, LevelRespDto.class)).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public LevelRespDto update(Integer id, LevelDto levelDto) {
         Level level = levelRepository.findById(id)
@@ -62,6 +69,7 @@ public class LevelServiceImpl implements LevelService {
         return modelMapper.map(levelRepository.save(level), LevelRespDto.class);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public Page<LevelRespDto> findWithPagination(Pageable pageable) {
         Page<Level> levelPage = levelRepository.findAll(pageable);

@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/api/ranking")
+//@RequestMapping("/api/ranking")
 public class RankingController {
     @Autowired
     private RankingService rankingService;
 
 
-    @PostMapping
+    @PostMapping("/api/ranking")
     public ResponseEntity<Map<String, Object>> createRanking(@Valid @RequestBody RankingDto rankingDto){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -35,7 +35,7 @@ public class RankingController {
         }
     }
 
-    @GetMapping("/calculate/{compName}")
+    @GetMapping("/api/ranking/calculate/{compName}")
     public ResponseEntity<Map<String, Object>> calcule(@PathVariable String compName){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -48,7 +48,7 @@ public class RankingController {
         }
     }
 
-    @GetMapping("/top3/{compName}")
+    @GetMapping("/api/ranking/top3/{compName}")
     public ResponseEntity<Map<String, Object>> getTop3Rank(@PathVariable String compName){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -62,7 +62,7 @@ public class RankingController {
     }
 
 
-    @DeleteMapping("/{code}/{id}")
+    @DeleteMapping("/api/ranking/{code}/{id}")
     public ResponseEntity<Map<String, Object>> deleteRanking(@PathVariable String code, @PathVariable Integer id){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -75,7 +75,7 @@ public class RankingController {
         }
     }
 
-    @GetMapping("/{code}/{id}")
+    @GetMapping("/api/ranking/{code}/{id}")
     public ResponseEntity<Map<String, Object>> getOneRanking(@PathVariable String code, @PathVariable Integer id){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -87,7 +87,7 @@ public class RankingController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/api/ranking/all")
     public ResponseEntity<Map<String, Object>> getAllRankings(){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -99,7 +99,7 @@ public class RankingController {
         }
     }
 
-    @PutMapping("/{code}/{id}")
+    @PutMapping("/api/ranking/{code}/{id}")
     public ResponseEntity<Map<String, Object>> updateRanking(@PathVariable String code, @PathVariable Integer id, @Valid @RequestBody RankingDto rankingDto){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -111,7 +111,7 @@ public class RankingController {
         }
     }
 
-    @GetMapping("/paginated")
+    @GetMapping("/api/ranking/paginated")
     public ResponseEntity<List<RankingDto>> getPaginatedRankings(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size

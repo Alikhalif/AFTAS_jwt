@@ -2,6 +2,7 @@ package com.youcode.myaftas.Controller;
 
 import com.youcode.myaftas.dto.MemberDto;
 import com.youcode.myaftas.dto.responseDTO.MemberRespDto;
+import com.youcode.myaftas.service.ImplService.AuthenticationService;
 import com.youcode.myaftas.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -15,13 +16,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
-@RequestMapping("/api/member")
+@RestController
+//@RequestMapping("/api/member")
 public class MemberController {
     @Autowired
-    private MemberService memberService;
+    private AuthenticationService memberService;
 
-    @PostMapping
+
+    @PostMapping("/api/member")
     public ResponseEntity<Map<String, Object>> createMember(@Valid @RequestBody MemberDto memberDto){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -33,7 +35,7 @@ public class MemberController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/member/{id}")
     public ResponseEntity<Map<String, Object>> deleteMember(@PathVariable Integer id){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -46,7 +48,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/num/{id}")
+    @GetMapping("/api/member/num/{id}")
     public ResponseEntity<Map<String, Object>> getOneMember(@PathVariable Integer id){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -58,7 +60,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/name/{name}")
+    @GetMapping("/api/member/name/{name}")
     public ResponseEntity<Map<String, Object>> getMemberByName(@PathVariable String name){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -70,7 +72,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/familyname/{fname}")
+    @GetMapping("/api/member/familyname/{fname}")
     public ResponseEntity<Map<String, Object>> getMemberByFamilyName(@PathVariable String fname){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -82,7 +84,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/api/member/all")
     public ResponseEntity<Map<String, Object>> getAllMembers(){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -94,7 +96,7 @@ public class MemberController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/api/member/{id}")
     public ResponseEntity<Map<String, Object>> updateMember(@PathVariable Integer id, @Valid @RequestBody MemberDto memberDto){
         Map<String, Object> message = new HashMap<>();
         try{
@@ -106,7 +108,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/paginated/")
+    @GetMapping("/api/member/paginated")
     public ResponseEntity<List<MemberRespDto>> getPaginatedMembers(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size

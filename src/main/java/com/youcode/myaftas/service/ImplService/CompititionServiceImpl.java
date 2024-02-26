@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -23,6 +24,7 @@ public class CompititionServiceImpl implements CompititionService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public CompetitionRespDto create(CompetitionDto competitionDto){
         Competition competition = modelMapper.map(competitionDto, Competition.class);
@@ -31,6 +33,7 @@ public class CompititionServiceImpl implements CompititionService {
         return modelMapper.map(competition, CompetitionRespDto.class);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public void delete(String code){
         Competition competition = competitionRepository.findById(code)
@@ -38,6 +41,7 @@ public class CompititionServiceImpl implements CompititionService {
         competitionRepository.delete(competition);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public CompetitionRespDto getOne(String code){
         Optional<Competition> competition = competitionRepository.findByCode(code);
@@ -47,10 +51,13 @@ public class CompititionServiceImpl implements CompititionService {
         return modelMapper.map(competition, CompetitionRespDto.class);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public List<CompetitionRespDto> getAll(){
         return Arrays.asList(modelMapper.map(competitionRepository.findAll(), CompetitionRespDto[].class));
     }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
 
     @Override
     public CompetitionRespDto update(String code, CompetitionDto competitionDto){
@@ -81,6 +88,7 @@ public class CompititionServiceImpl implements CompititionService {
         return modelMapper.map(competition, CompetitionRespDto.class);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public Page<CompetitionRespDto> findWithPagination(Pageable pageable) {
         Page<Competition> competitionsPage = competitionRepository.findAll(pageable);

@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class FishServiceImpl implements FishService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public FishRespDto create(FishDto fishDto){
         Fish fish = modelMapper.map(fishDto, Fish.class);
@@ -39,6 +41,7 @@ public class FishServiceImpl implements FishService {
         return modelMapper.map(fish, FishRespDto.class);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public void delete(String name){
         Fish fish = fishRepository.findById(name)
@@ -46,6 +49,7 @@ public class FishServiceImpl implements FishService {
         fishRepository.delete(fish);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public FishRespDto getOne(String name){
         Optional<Fish> fish = fishRepository.findByName(name);
@@ -55,16 +59,19 @@ public class FishServiceImpl implements FishService {
         return modelMapper.map(fish, FishRespDto.class);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public List<Fish> searchFishsByName(String name) {
         return fishRepository.findByNameContainingIgnoreCase(name);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public List<FishRespDto> findAll() {
         return fishRepository.findAll().stream().map(fish -> modelMapper.map(fish, FishRespDto.class)).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public FishRespDto update(String name, FishDto fishDto) {
         Fish fish = fishRepository.findById(name)
@@ -72,7 +79,7 @@ public class FishServiceImpl implements FishService {
         return modelMapper.map(fishRepository.save(fish), FishRespDto.class);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public Page<FishRespDto> findWithPagination(Pageable pageable) {
         Page<Fish> fishPage = fishRepository.findAll(pageable);

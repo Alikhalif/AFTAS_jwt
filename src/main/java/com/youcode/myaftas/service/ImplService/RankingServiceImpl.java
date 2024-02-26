@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class RankingServiceImpl implements RankingService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public RankingDto create(RankingDto rankingDto){
         if (compititionService.getOne(rankingDto.getCompetition_id()).getNumberOfParticipants() > rankingRepository.countByCompetitionId(rankingDto.getCompetition_id())) {
@@ -80,6 +82,7 @@ public class RankingServiceImpl implements RankingService {
     }
 
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public void calculate(String compitition_name){
         List<Hunting> huntingListList = huntingRepository.findAllByCompetitionCode(compitition_name);
@@ -133,7 +136,7 @@ public class RankingServiceImpl implements RankingService {
 
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public List<RankingDto> sortByScore(List<RankingDto> rankings) {
         return rankings.stream()
@@ -142,6 +145,7 @@ public class RankingServiceImpl implements RankingService {
     }
 
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public List<RankingRespDto> getTop3Rank(String compitition_name) {
         List<Ranking> top3Rankings = rankingRepository.findTop3ByCompetitionCodeOrderByRankAsc(compitition_name);
@@ -156,6 +160,7 @@ public class RankingServiceImpl implements RankingService {
         return rankingDto;
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public void delete(String code, Integer id){
         RankingId rankingId = new RankingId(
@@ -168,6 +173,7 @@ public class RankingServiceImpl implements RankingService {
         rankingRepository.delete(ranking);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public RankingDto getOne(String code, Integer id){
         RankingId rankingId = new RankingId(
@@ -179,11 +185,13 @@ public class RankingServiceImpl implements RankingService {
         return modelMapper.map(ranking, RankingDto.class);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public List<RankingDto> findAll() {
         return rankingRepository.findAll().stream().map(ranking -> modelMapper.map(ranking, RankingDto.class)).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public RankingDto update(String code, Integer id, RankingDto rankingDto) {
         RankingId rankingId = new RankingId(
@@ -195,6 +203,7 @@ public class RankingServiceImpl implements RankingService {
         return modelMapper.map(rankingRepository.save(existingRanking), RankingDto.class);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public Page<RankingDto> findWithPagination(Pageable pageable) {
         Page<Ranking> rankingPage = rankingRepository.findAll(pageable);

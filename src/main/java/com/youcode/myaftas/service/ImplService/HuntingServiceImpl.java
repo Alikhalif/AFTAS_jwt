@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -39,7 +40,7 @@ public class HuntingServiceImpl implements HuntingService {
     @Autowired
     private ModelMapper modelMapper;
 
-
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public List<HuntingDto> create(List<HuntingDto> huntingDtos){
         return huntingDtos.stream().map(huntingDto -> {
@@ -90,7 +91,7 @@ public class HuntingServiceImpl implements HuntingService {
 
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public void delete(Integer id){
         Hunting hunting = huntingRepository.findById(id)
@@ -99,6 +100,7 @@ public class HuntingServiceImpl implements HuntingService {
     }
 
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public HuntingDto getOne(Integer id){
         Hunting hunting = huntingRepository.findById(id)
@@ -106,11 +108,13 @@ public class HuntingServiceImpl implements HuntingService {
         return modelMapper.map(hunting, HuntingDto.class);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public List<HuntingDto> findAll() {
         return huntingRepository.findAll().stream().map(hunting -> modelMapper.map(hunting, HuntingDto.class)).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_JURY','ROLE_ADMIN')")
     @Override
     public HuntingDto update(Integer id, HuntingDto huntingDto) {
         Hunting hunting = huntingRepository.findById(id)
@@ -118,16 +122,17 @@ public class HuntingServiceImpl implements HuntingService {
         return modelMapper.map(huntingRepository.save(hunting), HuntingDto.class);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public Page<HuntingDto> findWithPagination(Pageable pageable) {
         Page<Hunting> huntingPage = huntingRepository.findAll(pageable);
         return huntingPage.map(hunting -> modelMapper.map(hunting, HuntingDto.class));
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADHERENT','ROLE_JURY','ROLE_ADMIN')")
     @Override
     public List<HuntingDto> findHuntingByCompititionAndMember(String code, Integer id){
         return Arrays.asList(modelMapper.map(huntingRepository.findHuntingByCompetitionCodeAndMemberId(code,id), HuntingDto[].class));
-
 
     }
 

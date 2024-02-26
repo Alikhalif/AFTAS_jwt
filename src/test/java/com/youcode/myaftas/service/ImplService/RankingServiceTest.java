@@ -77,14 +77,14 @@ public class RankingServiceTest {
 
     public static Hunting createDummyHunting() {
         Competition competition = Competition.builder().code("sss").build();
-        Member member = Member.builder().id(1).name("Dummy Member").build();
+        //Member member = Member.builder().id(1).name("Dummy Member").build();
         Fish fish = Fish.builder().name("ssdd").name("Dummy Fish").build();
 
         return Hunting.builder()
                 .id(1)
                 .nomberOfFish(5) // Set the number of fish as needed
                 .competition(competition)
-                .member(member)
+                //.member(member)
                 .fish(fish)
                 .build();
     }
